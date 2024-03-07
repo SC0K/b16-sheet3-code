@@ -12,7 +12,7 @@ template <typename V> struct BinaryTreeEnhanced {
     std::unique_ptr<BinaryTreeEnhanced<V>> _right;
 
     // WRITE YOUR CODE HERE
-
+    BinaryTreeEnhanced<V> *_parent;
     friend V &value(BinaryTreeEnhanced *t) { return t->_value; }
     friend const V &value(const BinaryTreeEnhanced *t)
     {
@@ -29,6 +29,7 @@ template <typename V> struct BinaryTreeEnhanced {
     friend BinaryTreeEnhanced *parent(const BinaryTreeEnhanced *t)
     {
         // WRITE YOUR CODE HERE
+        return t->_parent;
     }
 };
 
@@ -40,6 +41,15 @@ make_binary_tree_enhanced(const V &value,
                           std::unique_ptr<BinaryTreeEnhanced<V>> r)
 {
     // WRITE YOUR CODE HERE
+    auto tree = std::unique_ptr<BinaryTreeEnhanced<V>>{
+        new BinaryTreeEnhanced<V>{value, std::move(l), std::move(r)}}; // std::move(l) and std::move(r) are used to transfer the ownership of the unique pointers to the new tree
+        if (left(tree.get())) {
+            left(tree.get())->_parent = tree.get();
+        }
+        if (right(tree.get())) {
+            right(tree.get())->_parent = tree.get();
+        }
+        return tree;
 }
 
 #endif // __binary_tree_enhanced__
